@@ -1,0 +1,102 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using WindowsFormsApplication2.Model;
+using MySql.Data.MySqlClient;
+using System.Windows.Forms;
+
+
+        public MySqlConnection connection { set; get; }
+        public MySqlDataReader reader { set; get; }
+        C_connection connector = new C_connection();
+
+//Insert and Update
+public void insert_update(M_exam mExam, bool add)
+        {
+            try
+            {
+                connection = connector.con();
+                connection.Open();
+                MySqlCommand comm = connection.CreateCommand();
+                string qry = "";
+                string stat = "";
+                if (add)
+                {
+                    qry = @"INSERT INTO `dbase`.`exam`
+                            (
+                                `type`,
+                                `semester`,
+                                `datetime`,
+                                `time`,
+                                `subject_code`,
+                                `section`,
+                                `examinee` 
+                            )
+                            VALUES
+                            (
+                                @type,
+                                @semester,
+                                @datetime,
+                                @time,
+                                @subject_code,
+                                @section,
+                                @examinee 
+                            );";
+                    stat = "Successfully Added";
+                }
+                else
+                {
+                    qry = @"UPDATE `dbase`.`exam`
+                            SET 
+                            `type` = @type,
+                            `semester` = @semester,
+                            `datetime` = @datetime,
+                            `time` = @time,
+                            `subject_code` = @subject_code,
+                            `section` = @section,
+                            `examinee` = @examinee 
+                            WHERE `id` = '"+ examID +"'";
+                    stat = "Successfully Update";
+                }
+                comm.CommandText = qry;
+                comm.Parameters.AddWithValue("@type", mExam.type);
+                comm.Parameters.AddWithValue("@semester", mExam.semester);
+                comm.Parameters.AddWithValue("@datetime", mExam.datetime);
+                comm.Parameters.AddWithValue("@time", mExam.time);
+                comm.Parameters.AddWithValue("@subject_code", mExam.subjectCode);
+                comm.Parameters.AddWithValue("@section", mExam.section);
+                comm.Parameters.AddWithValue("@examinee", mExam.examinee); 
+                comm.ExecuteNonQuery();
+                MessageBox.Show(stat, "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }
+
+
+
+
+
+
+//Delete
+ public void delete()
+        {
+            try
+            {
+                connection = connector.con();
+                connection.Open();
+                MySqlCommand comm = connection.CreateCommand();
+                comm.CommandText = @"DELETE FROM `dbase`.`exam` WHERE id=@id;";
+                comm.Parameters.AddWithValue("@id", examID);
+                comm.ExecuteNonQuery();
+                MessageBox.Show("Successfully Deleted", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }

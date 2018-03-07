@@ -1,0 +1,16 @@
+public MySqlConnection connection2 { set; get; }
+        string config = @"server=localhost;username=root;password=;database=dbase;Allow User Variables = true;";
+        public MySqlConnection con()
+        {
+            connection2 = new MySqlConnection(config);
+            try
+            {
+                connection2.Open();
+                connection2.Close();
+            }
+            catch (Exception)
+            {
+                MessageBox.Show("Server Failed ! ");
+            }
+            return connection2;
+        }

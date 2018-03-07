@@ -1,0 +1,38 @@
+
+        public MySqlConnection connection { set; get; }
+        public MySqlDataReader reader { set; get; }
+        C_connection connector = new C_connection();
+
+ public List<M_exam> listEx12(string qry)
+        {
+            try
+            {
+                listEx.Clear();
+                connection = connector.con();
+                connection.Open();
+                MySqlCommand cmd = new MySqlCommand(qry, connection); 
+                reader = cmd.ExecuteReader();
+                while (reader.Read())
+                {
+                    mEx.id = Convert.ToInt32(reader.GetString("id"));
+                    mEx.type = reader.GetString("Type").ToString();
+                    mEx.semester = reader.GetString("Semester").ToString();
+                    mEx.datetime = reader.GetString("Date").ToString();
+                    mEx.time = reader.GetString("Time").ToString();
+                    mEx.subjectCode = reader.GetString("Subject Code").ToString();
+                    mEx.section = reader.GetString("Section").ToString();
+                    mEx.examinee = reader.GetString("Examinee").ToString();
+                    mEx.lastname = reader.GetString("Last Name").ToString();
+                    mEx.seat = reader.GetString("SEAT").ToString();
+                    mEx.room = reader.GetString("ROOM").ToString();
+                    mEx.proctor = reader.GetString("Proctor").ToString();
+                    listEx.Add(mEx);
+                }
+            }
+            finally
+            {
+                reader.Close();
+                connection.Close();
+            }
+            return listEx;
+        }
